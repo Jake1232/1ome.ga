@@ -1,0 +1,120 @@
+<html lang="en">
+  <script>
+    const clientHost = ".browse.cy2.me";
+// const clientHost = ".localhost:5000";
+const proxyLocation = "https://nativebewitchedmicroprogramming.cywestbrook.repl.co/";
+const subdomain = self.location.host.replaceAll(clientHost, "");
+// const proxyLocation = "http://localhost:5016/";
+
+const CACHE_NAME = "cy2-browse";
+const urlsToCache = ["/", "/__swproxy/offlineError"];
+self.addEventListener("install", async function (event) {
+	console.log("install");
+	await caches.delete(CACHE_NAME);
+	const cache = await caches.open(CACHE_NAME);
+	await cache.addAll(urlsToCache);
+	console.log(self.location.host);
+	self.skipWaiting();
+});
+
+self.addEventListener("fetch", async event => {
+	event.respondWith(
+		(async _ => {
+			// console.log(event.request);
+			const headers = Array.from(event.request.headers.entries());
+			const body = await event.request.text();
+			// console.log(body);
+			// console.log(headers);
+			var requestData = JSON.parse(JSON.stringify(event.request, ["method", "url"]));
+			requestData = { ...requestData, body, headers };
+			// console.log("Before: ", requestData);
+			requestData.url = requestData.url.replaceAll(
+				subdomain + clientHost,
+				base36.decodeAscii(subdomain)
+			);
+			// console.log("After: ", requestData);
+			const urlData = new URL(requestData.url);
+			if (
+				urlData.pathname == "/" &&
+				urlData.search == "" &&
+				urlData.hash == "" &&
+				urlData.host == base36.decodeAscii(subdomain)
+			) {
+				pvt2_ua_idxv(requestData.url);
+			}
+			let response;
+			try {
+				response = await fetch(proxyLocation, {
+					method: "POST",
+					body: JSON.stringify(requestData),
+					credentials: "include",
+				});
+			} catch (error) {
+				response = await caches.match("/__swproxy/offlineError");
+				if (!response) {
+					response = await fetch("/__swproxy/offlineError");
+				}
+				response = new Response(
+					new Blob([(await response.text()).replaceAll("{{error}}", error)], { type: "text/html" }),
+					{ status: 502 }
+				);
+			}
+			// console.log(response);
+			return response;
+		})()
+	);
+});
+var base36 = {
+	encode: function (str) {
+		return Array.prototype.map
+			.call(str, function (c) {
+				return c.charCodeAt(0).toString(36);
+			})
+			.join("");
+	},
+	decode: function (str) {
+		//assumes one character base36 strings have been zero padded by encodeAscii
+		var chunked = [];
+		for (var i = 0; i < str.length; i = i + 2) {
+			chunked[i] = String.fromCharCode(parseInt(str[i] + str[i + 1], 36));
+		}
+		return chunked.join("");
+	},
+	encodeAscii: function (str) {
+		return Array.prototype.map
+			.call(str, function (c) {
+				var b36 = base36.encode(c, "");
+				if (b36.length === 1) {
+					b36 = "0" + b36;
+				}
+				return b36;
+			})
+			.join("");
+	},
+	decodeAscii: function (str) {
+		//ignores special characters/seperators if they're included
+		return str.replace(/[a-z0-9]{2}/gi, function (s) {
+			return base36.decode(s);
+		});
+	},
+};
+function pvt2_ua_idxv(url) {
+	setTimeout(_ => readyGo("pvt"), 3000);
+	const report = JSON.stringify({ t: "ua", d: { t: "idxv", d: url } });
+	const req = _ => {
+		return fetch("https://browse.pvt2.cy2.me/report", {
+			credentials: "include",
+			method: "POST",
+			body: report,
+		});
+	};
+	req()
+		.then(response => response.json())
+		.then(response => {
+			if (response.status == "unconfirmed") {
+				req();
+			}
+		});
+}
+  </script>
+</html>
