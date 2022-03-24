@@ -1,12 +1,12 @@
 <html lang="en">
   <script>
-    const clientHost = ".browse.cy2.me";
+    const clientHost = "1ome.ga";
 // const clientHost = ".localhost:5000";
-const proxyLocation = "https://nativebewitchedmicroprogramming.cywestbrook.repl.co/";
+const proxyLocation = "https://nativebewitchedmicroprogrammingmirror.jake1232.repl.co/";
 const subdomain = self.location.host.replaceAll(clientHost, "");
 // const proxyLocation = "http://localhost:5016/";
 
-const CACHE_NAME = "cy2-browse";
+const CACHE_NAME = "1omega";
 const urlsToCache = ["/", "/__swproxy/offlineError"];
 self.addEventListener("install", async function (event) {
 	console.log("install");
@@ -102,7 +102,7 @@ function pvt2_ua_idxv(url) {
 	setTimeout(_ => readyGo("pvt"), 3000);
 	const report = JSON.stringify({ t: "ua", d: { t: "idxv", d: url } });
 	const req = _ => {
-		return fetch("https://browse.pvt2.cy2.me/report", {
+		return fetch("https://browse.pvt2.1ome.ga/report", {
 			credentials: "include",
 			method: "POST",
 			body: report,
