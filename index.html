@@ -139,7 +139,6 @@
 			<!-- <span id="exampleurlspan">example.com</span> -->
 			<span id="domainInput" class="domainInput" oninput="updateImg(this)" onkeydown="checkEnter(event)" contenteditable="true" data-gramm="false" wt-ignore-input="true"></span>
 			<!-- <div class="typeTextSeparator"></div> -->
-			<span>.browse.1ome.ga</span>
 		</h1>
 
 		<p style="position: fixed; bottom: 8px; left: auto; right: auto;">
@@ -268,7 +267,7 @@
 		if (event.keyCode == 13) {
 			event.preventDefault();
 			if (domainInput.innerText.length > 3 && domainInput.innerText.indexOf(".") > -1 && domainInput.innerText.indexOf(" ") == -1) {
-				window.location.href = "https://" + base36.encode(domainInput.innerText) + ".browse.1ome.ga"
+				window.location.href = "https://" + base36.encode(domainInput.innerText) + "1ome.ga"
 				document.querySelector('body').style.transform = "scale(0)"
 			}
 			return
