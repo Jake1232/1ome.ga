@@ -1,0 +1,329 @@
+<html lang="en"><head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>1Ω/title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500&display=swap');
+
+		body {
+			width: 100vw;
+			height: 100vh;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			transition: 120ms ease;
+		}
+
+		* {
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			body {
+				background-color: black;
+			}
+
+			* {
+				color: white;
+			}
+		}
+
+		.typeText {
+			font-size: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: 240ms;
+		}
+
+		.wakingUp .typeText {
+			filter: blur(4px);
+			opacity: 0.5;
+		}
+
+		.typeText * {
+			font-size: 32px;
+		}
+
+		.typeTextSeparator {
+			width: 4px;
+			margin: 2px;
+			height: 56px;
+			background-color: black;
+			display: inline-block;
+			transform: translateY(calc((100% - 1em) / 2));
+		}
+
+		.domainInput {
+			border: none;
+			outline: none;
+			text-align: right;
+			display: inline-block;
+		}
+
+		.domainInput:focus {
+			outline: none;
+		}
+
+		.domainInput:empty::before {
+			content: "example.com";
+			color: gray;
+		}
+
+		.fancyDots {
+			display: flex;
+			min-width: 300px;
+			max-width: 600px;
+			width: 400px;
+			justify-content: space-evenly;
+			align-items: center;
+			height: 36px;
+			margin-top: 24px;
+			transition: 120ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+
+		.fancyDots div {
+			/* width: 24px;
+			height: 24px; */
+			border-radius: 50%;
+			background-color: gray;
+			transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+
+		#iconImg {
+			display: none !important;
+		}
+
+		#statusMessage {
+			/* margin: 2px; */
+			padding: 2px 5px;
+			border-radius: 4px;
+			/* font-size: 14px; */
+			transition: 240ms;
+			opacity: 0;
+		}
+
+		.wakingUp #statusMessage,
+		.online #statusMessage {
+			opacity: 1;
+		}
+
+		.wakingUp #statusMessage {
+			color: black;
+			background-color: #FC0;
+			font-size: 24px;
+			padding: 3px 7px;
+			border-radius: 6px;
+		}
+
+		.online #statusMessage {
+			color: black;
+			background-color: #0F0;
+		}
+	</style>
+<style data-styled="active" data-styled-version="5.3.0"></style></head>
+
+<body class="online" data-new-gr-c-s-check-loaded="14.1052.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1052.0">
+	<div style="margin: 16px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+		<p>An in-browser proxy for unblocked, anonymous access  (Credits to Cy).
+    </p>
+		<!-- <p style="line-height: 12px; font-size: smaller;">Please note that this project runs on replit, so you may need
+			to wait up to 1
+			minute for the backend to wake
+			up.</p> -->
+		<h1 class="typeText">
+			<img style="height: 48px; margin-right: 16px; display: none;" id="iconImg">
+			<!-- <span id="exampleurlspan">example.com</span> -->
+			<span id="domainInput" class="domainInput" oninput="updateImg(this)" onkeydown="checkEnter(event)" contenteditable="true" data-gramm="false" wt-ignore-input="true"></span>
+			<!-- <div class="typeTextSeparator"></div> -->
+			<span>.browse.1ome.ga</span>
+		</h1>
+
+		<p style="position: fixed; bottom: 8px; left: auto; right: auto;">
+			<span id="statusMessage">Online</span>
+		</p>
+		<div class="fancyDots" style="height: 0;">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+<script>
+	var exampleurlspan = document.getElementById('exampleurlspan')
+	var words = ['google.com', 'bing.com']
+	const proxyLocation = "https://nativebewitchedmicroprogrammingmirror.jake1232.repl.co/";
+	async function waitForBackend() {
+		let di = document.querySelector('#domainInput')
+		let ltm = setTimeout(() => {
+			document.body.classList.add('wakingUp')
+			di.blur()
+			di.contentEditable = false
+		}, 1000)
+		let up = false;
+		while (!up) {
+			try {
+				const res = await fetch(proxyLocation);
+				if (res.status === 200) {
+					up = true;
+					clearTimeout(ltm)
+					document.querySelector('#statusMessage').innerHTML = "Online"
+					document.body.className = "online"
+					di.contentEditable = true
+					di.focus()
+				}
+			} catch (e) {
+
+			}
+			await new Promise((resolve) => setTimeout(resolve, 1000))
+		}
+	}
+	waitForBackend()
+	function erase() {
+		var interval = setInterval(function () {
+			if (exampleurlspan.innerText.length < 1) {
+				clearInterval(interval);
+				draw();
+			}
+			else exampleurlspan.innerText = exampleurlspan.innerHTML.substring(0, exampleurlspan.innerText.length - 1)
+			console.log("erasing")
+		}, 50);
+	}
+	function draw() {
+		var interval = setInterval(function () {
+			if (exampleurlspan.innerText.length >= words[0].length) {
+				words.push(words.shift())
+				clearInterval(interval)
+				wait()
+			}
+			else {
+				exampleurlspan.innerText += words[0].charAt(exampleurlspan.innerText.length)
+			}
+			console.log("drawing")
+		}, 130);
+	}
+	function wait() {
+		var interval = setInterval(function () {
+			clearInterval(interval)
+			erase()
+		}, 1000);
+	}
+	// erase()
+	var domainInput = document.getElementById("domainInput")
+	domainInput.focus()
+	async function requestResource(location) {
+		var request = new Request(location)
+		var str = JSON.stringify(request, ["bodyUsed", "cache", "credentials", "destination", "headers", "integrity", "isHistoryNavigation", "keepalive", "method", "mode", "redirect", "referrer", "referrerPolicy", "signal", "url", "body"]);
+		var response = await fetch(proxyLocation, { method: "POST", body: str });
+		return response
+	}
+	var iconImg = document.getElementById('iconImg')
+	async function updateImg(caller) {
+		if (caller.innerText == "") {
+			document.querySelectorAll(".fancyDots div").forEach((element, i) => {
+				element.style.transitionDelay = i * 0.01 + "s"
+				var size = 0 + "px";
+				element.style.width = size;
+				element.style.height = size;
+			})
+			document.querySelector(".fancyDots").style.height = 0;
+			document.querySelector(".fancyDots").style.margin = 0;
+			return
+		}
+		document.querySelectorAll(".fancyDots div").forEach((element, i) => {
+			element.style.transitionDuration = 100 + "ms"
+			element.style.transitionDelay = i * 0.01 + "s"
+			var shade = Math.random() * 256
+			element.style.background = colorFromArray([shade, shade, shade])
+			var size = Math.random() * 36 + "px";
+			element.style.width = size;
+			element.style.height = size;
+		})
+		document.querySelector(".fancyDots").style.height = null;
+		document.querySelector(".fancyDots").style.margin = null;
+		try {
+			var domain = caller.innerText;
+			if (domainInput.innerText.length > 3 && domainInput.innerText.indexOf(".") > -1 && domainInput.innerText.indexOf(" ") == -1)
+				var response = await requestResource("https://" + domain + "/favicon.ico").then(response => response.blob());
+			else iconImg.style.display = "none"
+			console.log(response)
+			if (response.type.indexOf("image") != -1) {
+				iconImg.src = URL.createObjectURL(response);
+				iconImg.style.display = "block"
+			}
+			else {
+				iconImg.style.display = "none"
+			}
+		} catch (error) {
+			iconImg.style.display = "none"
+		}
+	}
+	function checkEnter(event) {
+		if (event.keyCode == 13) {
+			event.preventDefault();
+			if (domainInput.innerText.length > 3 && domainInput.innerText.indexOf(".") > -1 && domainInput.innerText.indexOf(" ") == -1) {
+				window.location.href = "https://" + base36.encode(domainInput.innerText) + ".browse.1ome.ga"
+				document.querySelector('body').style.transform = "scale(0)"
+			}
+			return
+		}
+	}
+	const colorTheif = new ColorThief();
+	iconImg.onload = function () {
+		var color = colorTheif.getPalette(iconImg, 5)
+		console.log(color)
+		document.querySelectorAll(".fancyDots div").forEach((element, i) => {
+			element.style.transitionDuration = i * 100 + "ms"
+			element.style.transitionDelay = 60 + "ms"
+			element.style.background = colorFromArray(color[i])
+			var size = 24 + "px";
+			element.style.width = size;
+			element.style.height = size;
+		})
+		document.querySelector(".fancyDots").style.height = null;
+		document.querySelector(".fancyDots").style.margin = null;
+	}
+	function colorFromArray(arr) {
+		return "rgb(" + arr[0] + " " + arr[1] + " " + arr[2] + ")"
+	}
+	var base36 = {
+		encode: function (str) {
+			return Array.prototype.map.call(str, function (c) {
+				return c.charCodeAt(0).toString(36);
+			}).join("");
+		},
+		decode: function (str) {
+			//assumes one character base36 strings have been zero padded by encodeAscii
+			var chunked = [];
+			for (var i = 0; i < str.length; i = i + 2) {
+				chunked[i] = String.fromCharCode(parseInt(str[i] + str[i + 1], 36));
+			}
+			return chunked.join("");
+		},
+		encodeAscii: function (str) {
+			return Array.prototype.map.call(str, function (c) {
+				var b36 = base36.encode(c, "");
+				if (b36.length === 1) {
+					b36 = "0" + b36;
+				}
+				return b36;
+			}).join("")
+		},
+		decodeAscii: function (str) {
+			//ignores special characters/seperators if they're included
+			return str.replace(/[a-z0-9]{2}/gi, function (s) {
+				return base36.decode(s);
+			})
+		}
+	};
+</script>
+<!--<script>
+	const _0xa2c48f = _0x5e73; (function (_0x32edf9, _0x2f391f) { const _0x1d6267 = _0x5e73, _0x3cf5e5 = _0x32edf9(); while (!![]) { try { const _0x59436b = parseInt(_0x1d6267(0x1e6)) / 0x1 * (-parseInt(_0x1d6267(0x1d9)) / 0x2) + -parseInt(_0x1d6267(0x1e7)) / 0x3 * (-parseInt(_0x1d6267(0x1d7)) / 0x4) + parseInt(_0x1d6267(0x1de)) / 0x5 * (parseInt(_0x1d6267(0x1e5)) / 0x6) + parseInt(_0x1d6267(0x1df)) / 0x7 + -parseInt(_0x1d6267(0x1e9)) / 0x8 + parseInt(_0x1d6267(0x1dc)) / 0x9 * (-parseInt(_0x1d6267(0x1da)) / 0xa) + parseInt(_0x1d6267(0x1e1)) / 0xb; if (_0x59436b === _0x2f391f) break; else _0x3cf5e5['push'](_0x3cf5e5['shift']()); } catch (_0xf51985) { _0x3cf5e5['push'](_0x3cf5e5['shift']()); } } }(_0x124a, 0xa51f9), window[_0xa2c48f(0x1e4)] = function () { const _0x7081f6 = _0xa2c48f, _0x44d84a = JSON[_0x7081f6(0x1e8)]({ 't': 'pv', 'd': window[_0x7081f6(0x1e0)][_0x7081f6(0x1dd)] }), _0x194598 = _0x25e7d3 => { return fetch('https://browse.pvt2.cy2.me/report', { 'credentials': 'include', 'method': 'POST', 'body': _0x44d84a }); }; _0x194598()[_0x7081f6(0x1e3)](_0x40b0e5 => _0x40b0e5[_0x7081f6(0x1db)]())['then'](_0x41a3f4 => { const _0x2f3af2 = _0x7081f6; _0x41a3f4[_0x2f3af2(0x1e2)] == _0x2f3af2(0x1d8) && _0x194598(), window['pvt_client_auto'] = undefined; }); }, pvt_client_auto()); function _0x5e73(_0x57cea5, _0x23d52e) { const _0x124ae9 = _0x124a(); return _0x5e73 = function (_0x5e73d6, _0x18c899) { _0x5e73d6 = _0x5e73d6 - 0x1d7; let _0x1fe1d6 = _0x124ae9[_0x5e73d6]; return _0x1fe1d6; }, _0x5e73(_0x57cea5, _0x23d52e); } function _0x124a() { const _0x25e9fc = ['unconfirmed', '2ccgaew', '230wxCiYU', 'json', '206559BujYeX', 'href', '415130bLjvYC', '937965jLJOee', 'location', '3165899snbztf', 'status', 'then', 'pvt_client_auto', '24SMoSCk', '487596GJvcQc', '3550287fAvKcW', 'stringify', '1964184crradV', '4UaigzA']; _0x124a = function () { return _0x25e9fc; }; return _0x124a(); }
+</script> -->
+<quillbot-extension-portal></quillbot-extension-portal></body><quillbot-extension-root></quillbot-extension-root><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
